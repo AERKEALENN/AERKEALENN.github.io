@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - AERKEALENN</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #fff;
+            color: #1a1a1a;
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: opacity 0.4s ease-out, filter 0.2s ease-out, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.fade-out {
+            opacity: 0;
+            filter: blur(8px);
+            transform: scale(1.15);
+            overflow: hidden;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .nav {
+            position: fixed;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            padding: 8px 10px;
+            background: transparent;
+            backdrop-filter: blur(1px);
+            -webkit-backdrop-filter: blur(1px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 999px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            opacity: 0;
+            animation: navFadeIn 0.6s ease-out 0.3s forwards;
+        }
+
+        .nav a {
+            padding: 8px 20px;
+            font-size: 0.875rem;
+            color: #999;
+            text-decoration: none;
+            letter-spacing: 0.05em;
+            border-radius: 999px;
+            background: transparent;
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            transition: all 0.3s ease;
+        }
+
+        .nav a:hover {
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: #1a1a1a;
+        }
+
+        .nav a.active {
+            background: transparent;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            color: #1a1a1a;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            pointer-events: none;
+            cursor: default;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 120px 24px 80px;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 400;
+            letter-spacing: 0.3em;
+            text-align: center;
+            margin-bottom: 60px;
+            display: inline-block;
+            width: 100%;
+            padding: 4px 14px;
+            background: transparent;
+            backdrop-filter: blur(1.5px);
+            -webkit-backdrop-filter: blur(1.5px);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            border-radius: 999px;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out 0.2s forwards;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 24px;
+            justify-items: center;
+        }
+
+        .project-card {
+            max-width: 360px;
+            padding: 28px 24px;
+            background: transparent;
+            backdrop-filter: blur(1.5px);
+            -webkit-backdrop-filter: blur(1.5px);
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            border-radius: 20px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-color: rgba(0, 0, 0, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            transform: translateY(-4px);
+        }
+
+        .project-card:nth-child(1) { animation-delay: 0.5s; }
+
+        .project-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+
+        .project-desc {
+            font-size: 0.85rem;
+            color: #999;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            color: #999;
+            padding: 3px 10px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 999px;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            display: flex;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-close {
+            position: fixed;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 28px;
+            font-size: 0.875rem;
+            color: #999;
+            background: transparent;
+            backdrop-filter: blur(1.5px);
+            -webkit-backdrop-filter: blur(1.5px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 999px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 101;
+        }
+
+        .modal-close:hover {
+            color: #1a1a1a;
+            border-color: rgba(0, 0, 0, 0.12);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .modal-half {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #1a1a1a;
+            transition: all 0.3s ease;
+        }
+
+        .modal-half span {
+            font-size: 8rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            opacity: 0.12;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-half:hover span {
+            opacity: 0.9;
+        }
+
+        .modal-half:first-child {
+            border-right: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                top: 16px;
+                padding: 6px 8px;
+            }
+
+            .nav a {
+                padding: 6px 14px;
+                font-size: 0.8rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+                letter-spacing: 0.2em;
+            }
+
+            .content {
+                padding: 100px 16px 60px;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @keyframes navFadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        body.fade-out {
+            opacity: 0;
+            filter: blur(8px);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <a href="index.html">主页</a>
+        <a href="projects.html" class="active">项目</a>
+    </nav>
+    <canvas id="particles"></canvas>
+    <div class="content">
+        <h1 class="page-title">PROJECTS</h1>
+        <div class="projects-grid">
+            <div class="project-card" id="project-qs-timer">
+                <div class="project-name">QS魔方计时</div>
+                <p class="project-desc">多人魔方计时器，支持键盘/点击记录成绩、自动排名、金银铜高亮及时间差显示。</p>
+                <div class="project-tags">
+                    <span class="tag">Tauri 2.0</span>
+                    <span class="tag">React 19</span>
+                    <span class="tag">TypeScript</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal">
+        <a href="https://github.com/AERKEALENN/qs-timer" target="_blank" class="modal-half">
+            <span>GitHub</span>
+        </a>
+        <a href="https://gitee.com/AERKEALENN/qs-timer" target="_blank" class="modal-half">
+            <span>Gitee</span>
+        </a>
+        <button class="modal-close" id="modal-close">取消</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let hLines = [];
+        let vLines = [];
+        let startTime = null;
+        let lineOpacity = 0;
+
+        function createLines() {
+            hLines = [];
+            vLines = [];
+            const spacing = 60;
+
+            const hCount = Math.ceil(canvas.height / spacing);
+            for (let i = 0; i < hCount; i++) {
+                hLines.push({
+                    y: (canvas.height / hCount) * i + Math.random() * spacing,
+                    speed: (Math.random() * 0.4 + 0.1) * (Math.random() < 0.5 ? -1 : 1),
+                    opacity: Math.random() * 0.15 + 0.06
+                });
+            }
+
+            const vCount = Math.ceil(canvas.width / spacing);
+            for (let i = 0; i < vCount; i++) {
+                vLines.push({
+                    x: (canvas.width / vCount) * i + Math.random() * spacing,
+                    speed: (Math.random() * 0.4 + 0.1) * (Math.random() < 0.5 ? -1 : 1),
+                    opacity: Math.random() * 0.15 + 0.06
+                });
+            }
+        }
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (!startTime) startTime = Date.now();
+            const elapsed = (Date.now() - startTime) / 1000;
+
+            if (elapsed > 0.4) {
+                lineOpacity = Math.min(1, (elapsed - 0.4) / 0.8);
+            }
+
+            hLines.forEach(l => {
+                l.y += l.speed;
+                if (l.y < 0) l.y = canvas.height;
+                if (l.y > canvas.height) l.y = 0;
+
+                ctx.beginPath();
+                ctx.moveTo(0, l.y);
+                ctx.lineTo(canvas.width, l.y);
+                ctx.strokeStyle = `rgba(100, 149, 237, ${l.opacity * lineOpacity})`;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            });
+
+            vLines.forEach(l => {
+                l.x += l.speed;
+                if (l.x < 0) l.x = canvas.width;
+                if (l.x > canvas.width) l.x = 0;
+
+                ctx.beginPath();
+                ctx.moveTo(l.x, 0);
+                ctx.lineTo(l.x, canvas.height);
+                ctx.strokeStyle = `rgba(100, 149, 237, ${l.opacity * lineOpacity})`;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('load', () => {
+            resize();
+            createLines();
+            animate();
+        });
+
+        window.addEventListener('resize', () => {
+            resize();
+            createLines();
+        });
+
+        document.querySelectorAll('.nav a:not(.active)').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                document.body.classList.add('fade-out');
+                setTimeout(() => { window.location.href = link.href; }, 400);
+            });
+        });
+
+        const modal = document.getElementById('modal');
+        const card = document.getElementById('project-qs-timer');
+        const modalClose = document.getElementById('modal-close');
+
+        card.addEventListener('click', () => {
+            modal.classList.add('active');
+        });
+
+        modalClose.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        modal.addEventListener('click', e => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                modal.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
