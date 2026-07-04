@@ -192,7 +192,7 @@
         const canvas = document.getElementById('particles');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        const particleCount = 180;
+        let particleCount = 180;
         let triangle = { top: {}, left: {}, right: {} };
         let hLines = [];
         let vLines = [];
@@ -227,6 +227,7 @@
         function resize() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            particleCount = Math.floor((canvas.width * canvas.height) / 14500);
             initTriangle();
         }
 
