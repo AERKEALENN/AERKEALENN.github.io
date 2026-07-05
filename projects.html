@@ -133,10 +133,11 @@
             border: 1px solid rgba(0, 0, 0, 0.05);
             border-radius: 20px;
             box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
+            transition: backdrop-filter 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
             opacity: 0;
             animation: fadeInUp 0.6s ease-out forwards;
             cursor: pointer;
+            position: relative;
         }
 
         .project-card:hover {
@@ -177,96 +178,166 @@
             border-radius: 999px;
         }
 
-        .modal-overlay {
+        .project-detail-overlay {
+            display: none;
+        }
+
+        .card-backdrop {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            display: flex;
+            background: rgba(0, 0, 0, 0.01);
             z-index: 100;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.4s ease;
         }
 
-        .modal-overlay.active {
+        .card-backdrop.active {
             opacity: 1;
             pointer-events: auto;
         }
 
-        .modal-close {
+        .project-card.expanded {
             position: fixed;
-            bottom: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 10px 28px;
+            inset: 0;
+            margin: auto;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-color: rgba(0, 0, 0, 0.08);
+            box-shadow: 0 16px 64px rgba(0, 0, 0, 0.12);
+            z-index: 101;
+            cursor: default;
+        }
+
+        .project-detail {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            margin-top: 0;
+        }
+
+        .project-card.expanded .project-name {
+            font-size: 1.6rem;
+            transition: font-size 0.3s ease;
+        }
+
+        .detail-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .detail-name {
+            font-size: 2rem;
+            font-weight: 400;
+            letter-spacing: 0.2em;
+            margin-bottom: 8px;
+        }
+
+        .detail-desc {
             font-size: 0.875rem;
             color: #999;
+            line-height: 1.6;
+        }
+
+        .detail-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: #999;
             background: transparent;
-            backdrop-filter: blur(1.5px);
-            -webkit-backdrop-filter: blur(1.5px);
             border: 1px solid rgba(0, 0, 0, 0.05);
             border-radius: 999px;
             cursor: pointer;
             transition: all 0.3s ease;
-            z-index: 101;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1;
         }
 
-        .modal-close:hover {
+        .project-card.expanded .detail-close {
+            opacity: 1;
+            pointer-events: auto;
+            transition: all 0.3s ease 0.4s;
+        }
+
+        .detail-close:hover {
             color: #1a1a1a;
             border-color: rgba(0, 0, 0, 0.12);
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
         }
 
-        .modal-half {
-            flex: 1;
+        .detail-section {
+            margin-bottom: 20px;
+        }
+
+        .detail-title {
+            font-size: 0.75rem;
+            color: #bbb;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .detail-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .detail-list li {
+            font-size: 0.85rem;
+            color: #666;
+            line-height: 1.8;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .detail-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #ccc;
+        }
+
+        .detail-links {
             display: flex;
-            align-items: center;
-            justify-content: center;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .detail-link {
+            flex: 1;
+            text-align: center;
+            padding: 10px 16px;
+            font-size: 0.8rem;
+            color: #999;
             text-decoration: none;
-            color: #1a1a1a;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
             transition: all 0.3s ease;
         }
 
-        .modal-half span {
-            font-size: 8rem;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            opacity: 0.12;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal-half:hover span {
-            opacity: 0.9;
-        }
-
-        .modal-half:first-child {
-            border-right: 1px solid rgba(0, 0, 0, 0.03);
-        }
-
-        @media (orientation: portrait) {
-            .modal-overlay {
-                flex-direction: column;
-            }
-
-            .modal-half:first-child {
-                border-right: none;
-                border-bottom: 1px solid rgba(0, 0, 0, 0.03);
-            }
-
-            .modal-half span {
-                font-size: 5rem;
-            }
-
-            .modal-close {
-                top: 50%;
-                bottom: auto;
-                transform: translate(-50%, -50%);
-            }
+        .detail-link:hover {
+            color: #1a1a1a;
+            border-color: rgba(0, 0, 0, 0.12);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
         }
 
         @media (max-width: 768px) {
@@ -334,26 +405,49 @@
         </div>
         <div class="projects-grid">
             <div class="project-card" id="project-qs-timer">
-                <div class="project-name">QS魔方计时</div>
-                <p class="project-desc">多人魔方计时器，支持键盘/点击记录成绩、自动排名、金银铜高亮及时间差显示。</p>
-                <div class="project-tags">
-                    <span class="tag">Tauri 2.0</span>
-                    <span class="tag">React 19</span>
-                    <span class="tag">TypeScript</span>
+                <button class="detail-close" id="detail-close">&times;</button>
+                <div class="project-summary">
+                    <div class="project-name">QS魔方计时</div>
+                    <p class="project-desc">多人魔方计时器，支持键盘/点击记录成绩、自动排名、金银铜高亮及时间差显示。</p>
+                    <div class="project-tags">
+                        <span class="tag">Tauri 2.0</span>
+                        <span class="tag">React 19</span>
+                        <span class="tag">TypeScript</span>
+                    </div>
+                </div>
+                <div class="project-detail">
+                    <div class="detail-section">
+                        <div class="detail-title">功能特性</div>
+                        <ul class="detail-list">
+                            <li>极光粒子动态背景</li>
+                            <li>自定义无边框标题栏（拖拽/最小化/最大化/关闭）</li>
+                            <li>键盘任意键记录选手成绩</li>
+                            <li>点击圆环区域也可触发</li>
+                            <li>成绩榜自动排名，金银铜高亮</li>
+                            <li>时间差（gap）显示</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-title">技术栈</div>
+                        <ul class="detail-list">
+                            <li>Tauri 2.0 + Rust 后端</li>
+                            <li>React 19 + TypeScript</li>
+                            <li>Vite 构建</li>
+                        </ul>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-title">源码</div>
+                        <div class="detail-links">
+                            <a href="https://github.com/AERKEALENN/qs-timer" target="_blank" class="detail-link">GitHub</a>
+                            <a href="https://gitee.com/AERKEALENN/qs-timer" target="_blank" class="detail-link">Gitee</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="modal">
-        <a href="https://github.com/AERKEALENN/qs-timer" target="_blank" class="modal-half">
-            <span>GitHub</span>
-        </a>
-        <a href="https://gitee.com/AERKEALENN/qs-timer" target="_blank" class="modal-half">
-            <span>Gitee</span>
-        </a>
-        <button class="modal-close" id="modal-close">取消</button>
-    </div>
+    <div class="card-backdrop" id="card-backdrop"></div>
 
     <script>
         const canvas = document.getElementById('particles');
@@ -450,27 +544,111 @@
             });
         });
 
-        const modal = document.getElementById('modal');
         const card = document.getElementById('project-qs-timer');
-        const modalClose = document.getElementById('modal-close');
+        const backdrop = document.getElementById('card-backdrop');
+        const closeBtn = document.getElementById('detail-close');
 
-        card.addEventListener('click', () => {
-            modal.classList.add('active');
+        function expandCard() {
+            card.style.animation = 'none';
+            card.style.opacity = '1';
+            const detail = card.querySelector('.project-detail');
+            const first = card.getBoundingClientRect();
+
+            card.style.transition = 'none';
+            detail.style.transition = 'none';
+            card.offsetHeight;
+
+            card.classList.add('expanded');
+            backdrop.classList.add('active');
+
+            detail.style.maxHeight = 'none';
+            detail.style.opacity = '0';
+            detail.style.marginTop = '24px';
+            detail.style.overflow = 'visible';
+
+            const last = card.getBoundingClientRect();
+
+            const deltaX = first.left - last.left;
+            const deltaY = first.top - last.top;
+            const scaleX = first.width / last.width;
+            const scaleY = first.height / last.height;
+
+            card.style.transformOrigin = '0 0';
+            card.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`;
+
+            card.offsetHeight;
+
+            requestAnimationFrame(() => {
+                card.style.transition = 'transform 0.35s cubic-bezier(0, 0, 0.2, 1)';
+                card.style.transform = '';
+                detail.style.transition = 'opacity 0.25s ease 0.05s';
+                detail.style.opacity = '1';
+            });
+
+            setTimeout(() => {
+                card.style.transition = '';
+                card.style.transformOrigin = '';
+            }, 500);
+        }
+
+        function collapseCard() {
+            const detail = card.querySelector('.project-detail');
+            const last = card.getBoundingClientRect();
+
+            card.style.transition = 'none';
+            card.offsetHeight;
+
+            detail.style.transition = 'opacity 0.15s ease';
+            detail.style.opacity = '0';
+            detail.style.maxHeight = '';
+            detail.style.marginTop = '';
+            detail.style.overflow = 'hidden';
+
+            card.classList.remove('expanded');
+            backdrop.classList.remove('active');
+            const first = card.getBoundingClientRect();
+
+            const deltaX = last.left - first.left;
+            const deltaY = last.top - first.top;
+            const scaleX = last.width / first.width;
+            const scaleY = last.height / first.height;
+
+            card.style.transformOrigin = '0 0';
+            card.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`;
+
+            card.offsetHeight;
+
+            requestAnimationFrame(() => {
+                card.style.transition = 'transform 0.35s cubic-bezier(0, 0, 0.2, 1)';
+                card.style.transform = '';
+            });
+
+            setTimeout(() => {
+                card.style.transition = '';
+                card.style.transformOrigin = '';
+                detail.style.transition = '';
+                detail.style.opacity = '';
+            }, 400);
+        }
+
+        card.addEventListener('click', e => {
+            if (card.classList.contains('expanded')) return;
+            if (e.target.closest('.detail-link') || e.target.closest('.detail-close')) return;
+            expandCard();
         });
 
-        modalClose.addEventListener('click', () => {
-            modal.classList.remove('active');
+        closeBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            collapseCard();
         });
 
-        modal.addEventListener('click', e => {
-            if (e.target === modal) {
-                modal.classList.remove('active');
-            }
+        backdrop.addEventListener('click', () => {
+            collapseCard();
         });
 
         document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') {
-                modal.classList.remove('active');
+            if (e.key === 'Escape' && card.classList.contains('expanded')) {
+                collapseCard();
             }
         });
     </script>
