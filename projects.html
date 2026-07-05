@@ -100,10 +100,8 @@
             font-size: 2rem;
             font-weight: 400;
             letter-spacing: 0.3em;
-            text-align: center;
             margin-bottom: 60px;
             display: inline-block;
-            width: 100%;
             padding: 4px 14px;
             background: transparent;
             backdrop-filter: blur(1.5px);
@@ -112,6 +110,11 @@
             border-radius: 999px;
             opacity: 0;
             animation: fadeInUp 0.6s ease-out 0.2s forwards;
+        }
+
+        .title-wrap {
+            text-align: center;
+            margin-bottom: 60px;
         }
 
         .projects-grid {
@@ -127,9 +130,9 @@
             background: transparent;
             backdrop-filter: blur(1.5px);
             -webkit-backdrop-filter: blur(1.5px);
-            border: 1px solid rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.05);
             border-radius: 20px;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
             opacity: 0;
             animation: fadeInUp 0.6s ease-out forwards;
@@ -326,7 +329,9 @@
     </nav>
     <canvas id="particles"></canvas>
     <div class="content">
-        <h1 class="page-title">PROJECTS</h1>
+        <div class="title-wrap">
+            <h1 class="page-title">PROJECTS</h1>
+        </div>
         <div class="projects-grid">
             <div class="project-card" id="project-qs-timer">
                 <div class="project-name">QS魔方计时</div>
