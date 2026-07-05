@@ -78,14 +78,25 @@
         }
 
         .nav a.active {
+            color: #1a1a1a;
+            pointer-events: none;
+            cursor: default;
+        }
+
+        .nav-pill {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: calc(100% - 12px);
             background: transparent;
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
-            color: #1a1a1a;
             border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 999px;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            transition: left 0.15s cubic-bezier(0, 0, 0.2, 1), width 0.15s cubic-bezier(0, 0, 0.2, 1);
             pointer-events: none;
-            cursor: default;
+            z-index: -1;
         }
 
         .content {
@@ -132,20 +143,21 @@
             -webkit-backdrop-filter: blur(1.5px);
             border: 1px solid rgba(0, 0, 0, 0.05);
             border-radius: 20px;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
             transition: backdrop-filter 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
             opacity: 0;
             animation: fadeInUp 0.6s ease-out forwards;
             cursor: pointer;
             position: relative;
+            will-change: transform, opacity;
         }
 
         .project-card:hover {
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
-            border-color: rgba(0, 0, 0, 0.08);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
-            transform: translateY(-4px);
+            border-color: rgba(0, 0, 0, 0.12);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+            transform: translateY(-6px) scale(1.02);
         }
 
         .project-card:nth-child(1) { animation-delay: 0.5s; }
@@ -329,14 +341,20 @@
             font-size: 0.8rem;
             color: #999;
             text-decoration: none;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            border-radius: 999px;
+            background: transparent;
+            backdrop-filter: blur(1.5px);
+            -webkit-backdrop-filter: blur(1.5px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             transition: all 0.3s ease;
         }
 
         .detail-link:hover {
             color: #1a1a1a;
             border-color: rgba(0, 0, 0, 0.12);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
         }
 
@@ -397,6 +415,7 @@
     <nav class="nav">
         <a href="index.html">主页</a>
         <a href="projects.html" class="active">项目</a>
+        <span class="nav-pill"></span>
     </nav>
     <canvas id="particles"></canvas>
     <div class="content">
@@ -445,9 +464,8 @@
                 </div>
             </div>
         </div>
+        <div class="card-backdrop" id="card-backdrop"></div>
     </div>
-
-    <div class="card-backdrop" id="card-backdrop"></div>
 
     <script>
         const canvas = document.getElementById('particles');
@@ -486,7 +504,14 @@
             canvas.height = window.innerHeight;
         }
 
-        function animate() {
+        let lastFrameTime = 0;
+        const frameInterval = 25;
+
+        function animate(timestamp) {
+            requestAnimationFrame(animate);
+            if (timestamp - lastFrameTime < frameInterval) return;
+            lastFrameTime = timestamp;
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             if (!startTime) startTime = Date.now();
@@ -521,14 +546,12 @@
                 ctx.lineWidth = 1;
                 ctx.stroke();
             });
-
-            requestAnimationFrame(animate);
         }
 
         window.addEventListener('load', () => {
             resize();
             createLines();
-            animate();
+            requestAnimationFrame(animate);
         });
 
         window.addEventListener('resize', () => {
@@ -536,12 +559,27 @@
             createLines();
         });
 
-        document.querySelectorAll('.nav a:not(.active)').forEach(link => {
-            link.addEventListener('click', e => {
-                e.preventDefault();
+        const nav = document.querySelector('.nav');
+        const pill = document.querySelector('.nav-pill');
+        const activeLink = nav.querySelector('.active');
+        const otherLink = nav.querySelector('a:not(.active)');
+
+        function positionPill(target) {
+            const navRect = nav.getBoundingClientRect();
+            const targetRect = target.getBoundingClientRect();
+            pill.style.left = (targetRect.left - navRect.left) + 'px';
+            pill.style.width = targetRect.width + 'px';
+        }
+
+        positionPill(activeLink);
+
+        otherLink.addEventListener('click', e => {
+            e.preventDefault();
+            positionPill(otherLink);
+            setTimeout(() => {
                 document.body.classList.add('fade-out');
-                setTimeout(() => { window.location.href = link.href; }, 400);
-            });
+                setTimeout(() => { window.location.href = otherLink.href; }, 400);
+            }, 150);
         });
 
         const card = document.getElementById('project-qs-timer');
@@ -562,9 +600,10 @@
             backdrop.classList.add('active');
 
             detail.style.maxHeight = 'none';
-            detail.style.opacity = '0';
             detail.style.marginTop = '24px';
             detail.style.overflow = 'visible';
+            detail.style.opacity = '0';
+            card.offsetHeight;
 
             const last = card.getBoundingClientRect();
 
@@ -596,12 +635,13 @@
             const last = card.getBoundingClientRect();
 
             card.style.transition = 'none';
+            card.style.pointerEvents = 'none';
             card.offsetHeight;
 
-            detail.style.transition = 'opacity 0.15s ease';
+            detail.style.transition = 'none';
+            detail.style.maxHeight = '0';
+            detail.style.marginTop = '0';
             detail.style.opacity = '0';
-            detail.style.maxHeight = '';
-            detail.style.marginTop = '';
             detail.style.overflow = 'hidden';
 
             card.classList.remove('expanded');
@@ -615,7 +655,6 @@
 
             card.style.transformOrigin = '0 0';
             card.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`;
-
             card.offsetHeight;
 
             requestAnimationFrame(() => {
@@ -626,24 +665,36 @@
             setTimeout(() => {
                 card.style.transition = '';
                 card.style.transformOrigin = '';
+                card.style.pointerEvents = '';
                 detail.style.transition = '';
                 detail.style.opacity = '';
+                detail.style.maxHeight = '';
+                detail.style.marginTop = '';
+                detail.style.overflow = '';
             }, 400);
         }
 
+        card.addEventListener('animationend', () => {
+            card.style.animation = 'none';
+            card.style.opacity = '1';
+        });
+
         card.addEventListener('click', e => {
-            if (card.classList.contains('expanded')) return;
+            if (card.classList.contains('expanded')) {
+                e.stopPropagation();
+                return;
+            }
             if (e.target.closest('.detail-link') || e.target.closest('.detail-close')) return;
             expandCard();
         });
 
         closeBtn.addEventListener('click', e => {
             e.stopPropagation();
-            collapseCard();
+            if (card.classList.contains('expanded')) collapseCard();
         });
 
         backdrop.addEventListener('click', () => {
-            collapseCard();
+            if (card.classList.contains('expanded')) collapseCard();
         });
 
         document.addEventListener('keydown', e => {

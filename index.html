@@ -122,14 +122,25 @@
         }
 
         .nav a.active {
+            color: #1a1a1a;
+            pointer-events: none;
+            cursor: default;
+        }
+
+        .nav-pill {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: calc(100% - 12px);
             background: transparent;
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
-            color: #1a1a1a;
             border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 999px;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            transition: left 0.15s cubic-bezier(0, 0, 0.2, 1), width 0.15s cubic-bezier(0, 0, 0.2, 1);
             pointer-events: none;
-            cursor: default;
+            z-index: -1;
         }
 
         @media (max-width: 768px) {
@@ -181,6 +192,7 @@
     <nav class="nav">
         <a href="index.html" class="active">主页</a>
         <a href="projects.html">项目</a>
+        <span class="nav-pill"></span>
     </nav>
     <canvas id="particles"></canvas>
     <div class="container">
@@ -227,7 +239,10 @@
         function resize() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            particleCount = Math.floor((canvas.width * canvas.height) / 14500);
+            const isMobile = canvas.width < 768;
+            const density = isMobile ? 8000 : 14500;
+            const min = isMobile ? 50 : 120;
+            particleCount = Math.max(min, Math.floor((canvas.width * canvas.height) / density));
             initTriangle();
         }
 
@@ -345,7 +360,14 @@
             }
         }
 
-        function animate() {
+        let lastFrameTime = 0;
+        const frameInterval = 25;
+
+        function animate(timestamp) {
+            requestAnimationFrame(animate);
+            if (timestamp - lastFrameTime < frameInterval) return;
+            lastFrameTime = timestamp;
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             if (!startTime) startTime = Date.now();
@@ -449,15 +471,13 @@
                 ctx.fillStyle = `rgba(0, 0, 0, ${p.opacity * particleOpacity})`;
                 ctx.fill();
             });
-
-            requestAnimationFrame(animate);
         }
 
         window.addEventListener('load', () => {
             resize();
             createParticles();
             createLines();
-            animate();
+            requestAnimationFrame(animate);
         });
 
         window.addEventListener('resize', () => {
@@ -466,12 +486,27 @@
             createLines();
         });
 
-        document.querySelectorAll('.nav a:not(.active)').forEach(link => {
-            link.addEventListener('click', e => {
-                e.preventDefault();
+        const nav = document.querySelector('.nav');
+        const pill = document.querySelector('.nav-pill');
+        const activeLink = nav.querySelector('.active');
+        const otherLink = nav.querySelector('a:not(.active)');
+
+        function positionPill(target) {
+            const navRect = nav.getBoundingClientRect();
+            const targetRect = target.getBoundingClientRect();
+            pill.style.left = (targetRect.left - navRect.left) + 'px';
+            pill.style.width = targetRect.width + 'px';
+        }
+
+        positionPill(activeLink);
+
+        otherLink.addEventListener('click', e => {
+            e.preventDefault();
+            positionPill(otherLink);
+            setTimeout(() => {
                 document.body.classList.add('fade-out');
-                setTimeout(() => { window.location.href = link.href; }, 400);
-            });
+                setTimeout(() => { window.location.href = otherLink.href; }, 400);
+            }, 150);
         });
     </script>
 </body>
