@@ -152,12 +152,18 @@
             will-change: transform, opacity;
         }
 
-        .project-card:hover {
+        .project-card:not(.flipping):hover {
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
             border-color: rgba(0, 0, 0, 0.12);
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
             transform: translateY(-6px) scale(1.02);
+        }
+
+        .project-card.expanded:not(.flipping):hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.1);
+            border-color: rgba(0, 0, 0, 0.12);
         }
 
         .project-card:nth-child(1) { animation-delay: 0.5s; }
@@ -218,7 +224,8 @@
             margin: auto;
             max-width: 600px;
             width: 90%;
-            max-height: 80vh;
+            max-height: none;
+            height: fit-content;
             overflow-y: auto;
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
@@ -339,7 +346,7 @@
             text-align: center;
             padding: 10px 16px;
             font-size: 0.8rem;
-            color: #999;
+            color: #777;
             text-decoration: none;
             border: 1px solid rgba(0, 0, 0, 0.02);
             border-radius: 999px;
@@ -356,6 +363,84 @@
             backdrop-filter: blur(6px);
             -webkit-backdrop-filter: blur(6px);
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .download-card {
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            border-radius: 999px;
+            background: transparent;
+            backdrop-filter: blur(1.5px);
+            -webkit-backdrop-filter: blur(1.5px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            transition: border-radius 0.3s ease;
+            will-change: transform;
+        }
+
+        .download-card.expanded {
+            border-radius: 16px;
+        }
+
+        .download-header {
+            padding: 10px 16px;
+            font-size: 0.8rem;
+            color: #777;
+            text-align: center;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .download-hint {
+            display: inline-block;
+            max-width: 0;
+            opacity: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            font-size: 0.7rem;
+            color: #bbb;
+            transition: max-width 0.3s ease, opacity 0.3s ease, margin-left 0.3s ease;
+        }
+
+        .download-card.expanded .download-hint {
+            max-width: 100px;
+            opacity: 1;
+            margin-left: 4px;
+        }
+
+        .download-card:hover .download-header {
+            color: #1a1a1a;
+        }
+
+        .download-menu {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.3s cubic-bezier(0, 0, 0.2, 1), opacity 0.2s ease;
+        }
+
+        .download-card.expanded .download-menu {
+            max-height: 200px;
+            opacity: 1;
+        }
+
+        .download-option {
+            padding: 10px 16px;
+            font-size: 0.8rem;
+            color: #999;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-top: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .download-option:hover {
+            color: #1a1a1a;
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        .download-option.loading {
+            opacity: 0.5;
+            pointer-events: none;
         }
 
         @media (max-width: 768px) {
@@ -459,6 +544,17 @@
                         <div class="detail-links">
                             <a href="https://github.com/AERKEALENN/qs-timer" target="_blank" class="detail-link">GitHub</a>
                             <a href="https://gitee.com/AERKEALENN/qs-timer" target="_blank" class="detail-link">Gitee</a>
+                        </div>
+                    </div>
+                    <div class="detail-section">
+                        <div class="detail-title">下载</div>
+                        <div class="download-card" id="download-card">
+                            <div class="download-header" id="download-btn">下载最新版本<span class="download-hint">（点击关闭）</span></div>
+                            <div class="download-menu" id="download-menu">
+                                <div class="download-option" data-ext="deb">Linux (deb)</div>
+                                <div class="download-option" data-ext="rpm">Linux (rpm)</div>
+                                <div class="download-option" data-ext="exe">Windows (exe)</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -587,6 +683,7 @@
         const closeBtn = document.getElementById('detail-close');
 
         function expandCard() {
+            card.classList.add('flipping');
             card.style.animation = 'none';
             card.style.opacity = '1';
             const detail = card.querySelector('.project-detail');
@@ -627,10 +724,15 @@
             setTimeout(() => {
                 card.style.transition = '';
                 card.style.transformOrigin = '';
+                card.classList.remove('flipping');
             }, 500);
         }
 
         function collapseCard() {
+            card.classList.add('flipping');
+            if (downloadCard.classList.contains('expanded')) {
+                downloadCard.classList.remove('expanded');
+            }
             const detail = card.querySelector('.project-detail');
             const last = card.getBoundingClientRect();
 
@@ -666,6 +768,7 @@
                 card.style.transition = '';
                 card.style.transformOrigin = '';
                 card.style.pointerEvents = '';
+                card.classList.remove('flipping');
                 detail.style.transition = '';
                 detail.style.opacity = '';
                 detail.style.maxHeight = '';
@@ -684,7 +787,7 @@
                 e.stopPropagation();
                 return;
             }
-            if (e.target.closest('.detail-link') || e.target.closest('.detail-close')) return;
+            if (e.target.closest('.detail-link') || e.target.closest('.detail-close') || e.target.closest('.download-card')) return;
             expandCard();
         });
 
@@ -701,6 +804,105 @@
             if (e.key === 'Escape' && card.classList.contains('expanded')) {
                 collapseCard();
             }
+        });
+
+        const downloadCard = document.getElementById('download-card');
+        const downloadBtn = document.getElementById('download-btn');
+        let releaseCache = null;
+
+        downloadBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            if (downloadCard.classList.contains('expanded')) {
+                collapseDownload();
+            } else {
+                expandDownload();
+            }
+        });
+
+        function expandDownload() {
+            const first = downloadCard.getBoundingClientRect();
+            downloadCard.style.transition = 'none';
+            downloadCard.offsetHeight;
+            downloadCard.classList.add('expanded');
+            const last = downloadCard.getBoundingClientRect();
+
+            const scaleX = first.width / last.width;
+            const scaleY = first.height / last.height;
+            const deltaX = first.left - last.left;
+            const deltaY = first.top - last.top;
+
+            downloadCard.style.transformOrigin = '0 0';
+            downloadCard.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`;
+            downloadCard.offsetHeight;
+
+            requestAnimationFrame(() => {
+                downloadCard.style.transition = 'transform 0.6s cubic-bezier(0, 0, 0.2, 1)';
+                downloadCard.style.transform = '';
+            });
+
+            setTimeout(() => {
+                downloadCard.style.transition = '';
+                downloadCard.style.transformOrigin = '';
+            }, 650);
+        }
+
+        function collapseDownload() {
+            const last = downloadCard.getBoundingClientRect();
+            downloadCard.style.transition = 'none';
+            downloadCard.offsetHeight;
+            downloadCard.classList.remove('expanded');
+            const first = downloadCard.getBoundingClientRect();
+
+            const scaleX = last.width / first.width;
+            const scaleY = last.height / first.height;
+            const deltaX = last.left - first.left;
+            const deltaY = last.top - first.top;
+
+            downloadCard.style.transformOrigin = '0 0';
+            downloadCard.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`;
+            downloadCard.offsetHeight;
+
+            requestAnimationFrame(() => {
+                downloadCard.style.transition = 'transform 0.45s cubic-bezier(0, 0, 0.2, 1)';
+                downloadCard.style.transform = '';
+            });
+
+            setTimeout(() => {
+                downloadCard.style.transition = '';
+                downloadCard.style.transformOrigin = '';
+            }, 500);
+        }
+
+        document.querySelectorAll('.download-option').forEach(opt => {
+            opt.addEventListener('click', async e => {
+                e.stopPropagation();
+                const ext = opt.dataset.ext;
+                const label = opt.textContent;
+                opt.classList.add('loading');
+                opt.textContent = '获取中...';
+
+                try {
+                    if (!releaseCache) {
+                        const res = await fetch('https://api.github.com/repos/AERKEALENN/qs-timer/releases/latest');
+                        releaseCache = await res.json();
+                    }
+
+                    const asset = releaseCache.assets.find(a => a.name.endsWith('.' + ext));
+                    if (asset) {
+                        const proxyUrl = 'https://gh.llkk.cc/' + asset.browser_download_url;
+                        window.location.href = proxyUrl;
+                        opt.textContent = label;
+                    } else {
+                        opt.textContent = '未找到 ' + ext + ' 包';
+                        setTimeout(() => { opt.textContent = label; }, 2000);
+                    }
+                } catch (err) {
+                    opt.textContent = '获取失败';
+                    setTimeout(() => { opt.textContent = label; }, 2000);
+                } finally {
+                    opt.classList.remove('loading');
+                }
+            });
         });
     </script>
 </body>
