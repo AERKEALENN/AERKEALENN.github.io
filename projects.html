@@ -883,14 +883,13 @@
 
                 try {
                     if (!releaseCache) {
-                        const res = await fetch('https://api.github.com/repos/AERKEALENN/qs-timer/releases/latest');
+                        const res = await fetch('https://gitee.com/api/v5/repos/AERKEALENN/qs-timer/releases/latest');
                         releaseCache = await res.json();
                     }
 
                     const asset = releaseCache.assets.find(a => a.name.endsWith('.' + ext));
                     if (asset) {
-                        const proxyUrl = 'https://gh.llkk.cc/' + asset.browser_download_url;
-                        window.location.href = proxyUrl;
+                        window.location.href = asset.browser_download_url;
                         opt.textContent = label;
                     } else {
                         opt.textContent = '未找到 ' + ext + ' 包';
