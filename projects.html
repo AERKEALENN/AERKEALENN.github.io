@@ -101,6 +101,7 @@
         .project-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 
         .tag { font-size: 0.75rem; color: #999; padding: 3px 10px; border: 1px solid rgba(0,0,0,0.05); border-radius: 999px; }
+        .tag-vibe { color: #5b9bd5; border-color: rgba(91,155,213,0.3); }
 
         .project-detail { max-height: 0; opacity: 0; overflow: hidden; margin-top: 0; }
 
@@ -167,6 +168,7 @@
             pointer-events: none; transition: opacity 0.4s ease;
         }
         .card-backdrop.active { opacity: 1; pointer-events: auto; }
+        .card-placeholder { visibility: hidden; pointer-events: none; }
 
         @media (max-width: 768px) {
             .nav { top: 16px; padding: 6px 8px; }
@@ -192,8 +194,8 @@
             <h1 class="page-title">PROJECTS</h1>
         </div>
         <div class="projects-grid" id="projects-grid"></div>
+        <div class="card-backdrop" id="card-backdrop"></div>
     </div>
-    <div class="card-backdrop" id="card-backdrop"></div>
 
     <script src="projects.js"></script>
     <script>
@@ -230,7 +232,7 @@
                 <div class="project-summary">
                     <div class="project-name">${p.name}</div>
                     <p class="project-desc">${p.desc}</p>
-                    <div class="project-tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+                    <div class="project-tags">${p.tags.map(t => `<span class="tag${t === 'VibeCoding' ? ' tag-vibe' : ''}">${t}</span>`).join('')}</div>
                 </div>
                 <div class="project-detail">
                     <div class="detail-section">
@@ -264,6 +266,12 @@
             target.style.transition = 'none';
             detail.style.transition = 'none';
             target.offsetHeight;
+
+            const ph = document.createElement('div');
+            ph.className = 'card-placeholder';
+            ph.style.height = first.height + 'px';
+            ph.style.width = first.width + 'px';
+            target.after(ph);
 
             target.classList.add('expanded');
             backdrop.classList.add('active');
@@ -301,6 +309,8 @@
         function collapseCard() {
             if (!activeCard) return;
             const target = activeCard;
+            const ph = target.nextElementSibling;
+            if (ph && ph.classList.contains('card-placeholder')) ph.remove();
             target.classList.add('flipping');
             const detail = target.querySelector('.project-detail');
             const last = target.getBoundingClientRect();
