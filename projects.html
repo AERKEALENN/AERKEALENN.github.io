@@ -6,11 +6,7 @@
     <title>Projects - AERKEALENN</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -21,479 +17,167 @@
             transition: opacity 0.4s ease-out, filter 0.2s ease-out, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        body.fade-out {
-            opacity: 0;
-            filter: blur(8px);
-            transform: scale(1.15);
-            overflow: hidden;
-        }
+        body.fade-out { opacity: 0; filter: blur(8px); transform: scale(1.15); overflow: hidden; }
 
-        canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
+        canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
 
         .nav {
-            position: fixed;
-            top: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 6px;
-            padding: 8px 10px;
-            background: transparent;
-            backdrop-filter: blur(1px);
-            -webkit-backdrop-filter: blur(1px);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            border-radius: 999px;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
-            z-index: 10;
-            opacity: 0;
-            animation: navFadeIn 0.6s ease-out 0.3s forwards;
+            position: fixed; top: 24px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 6px; padding: 8px 10px;
+            background: transparent; backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px);
+            border: 1px solid rgba(0,0,0,0.05); border-radius: 999px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.1); z-index: 10;
+            opacity: 0; animation: navFadeIn 0.6s ease-out 0.3s forwards;
         }
 
         .nav a {
-            padding: 8px 20px;
-            font-size: 0.875rem;
-            color: #999;
-            text-decoration: none;
-            letter-spacing: 0.05em;
-            border-radius: 999px;
-            background: transparent;
-            backdrop-filter: blur(0px);
-            -webkit-backdrop-filter: blur(0px);
+            padding: 8px 20px; font-size: 0.875rem; color: #999; text-decoration: none;
+            letter-spacing: 0.05em; border-radius: 999px; background: transparent;
             transition: all 0.3s ease;
         }
 
-        .nav a:hover {
-            background: rgba(255, 255, 255, 0.35);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            color: #1a1a1a;
-        }
-
-        .nav a.active {
-            color: #1a1a1a;
-            pointer-events: none;
-            cursor: default;
-        }
+        .nav a:hover { background: rgba(255,255,255,0.35); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: #1a1a1a; }
+        .nav a.active { color: #1a1a1a; pointer-events: none; cursor: default; }
 
         .nav-pill {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            height: calc(100% - 12px);
-            background: transparent;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            border-radius: 999px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-            transition: left 0.15s cubic-bezier(0, 0, 0.2, 1), width 0.15s cubic-bezier(0, 0, 0.2, 1);
-            pointer-events: none;
-            z-index: -1;
+            position: absolute; top: 50%; transform: translateY(-50%);
+            height: calc(100% - 12px); background: transparent;
+            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(0,0,0,0.05); border-radius: 999px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            transition: left 0.15s cubic-bezier(0,0,0.2,1), width 0.15s cubic-bezier(0,0,0.2,1);
+            pointer-events: none; z-index: -1;
         }
 
-        .content {
-            position: relative;
-            z-index: 1;
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 120px 24px 80px;
-        }
+        .content { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 120px 24px 80px; }
+        .title-wrap { text-align: center; margin-bottom: 60px; }
 
         .page-title {
-            font-size: 2rem;
-            font-weight: 400;
-            letter-spacing: 0.3em;
-            margin-bottom: 60px;
-            display: inline-block;
-            padding: 4px 14px;
-            background: transparent;
-            backdrop-filter: blur(1.5px);
-            -webkit-backdrop-filter: blur(1.5px);
-            border: 1px solid rgba(0, 0, 0, 0.03);
-            border-radius: 999px;
-            opacity: 0;
-            animation: fadeInUp 0.6s ease-out 0.2s forwards;
+            font-size: 2rem; font-weight: 400; letter-spacing: 0.3em;
+            display: inline-block; padding: 4px 14px; background: transparent;
+            backdrop-filter: blur(1.5px); -webkit-backdrop-filter: blur(1.5px);
+            border: 1px solid rgba(0,0,0,0.03); border-radius: 999px;
+            opacity: 0; animation: fadeInUp 0.6s ease-out 0.2s forwards;
         }
 
-        .title-wrap {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 24px;
-            justify-items: center;
-        }
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; justify-items: center; }
 
         .project-card {
-            max-width: 360px;
-            padding: 28px 24px;
-            background: transparent;
-            backdrop-filter: blur(1.5px);
-            -webkit-backdrop-filter: blur(1.5px);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            max-width: 360px; padding: 28px 24px; background: transparent;
+            backdrop-filter: blur(1.5px); -webkit-backdrop-filter: blur(1.5px);
+            border: 1px solid rgba(0,0,0,0.05); border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
             transition: backdrop-filter 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
-            opacity: 0;
-            animation: fadeInUp 0.6s ease-out forwards;
-            cursor: pointer;
-            position: relative;
-            will-change: transform, opacity;
+            opacity: 0; animation: fadeInUp 0.6s ease-out forwards;
+            cursor: pointer; position: relative; will-change: transform, opacity;
         }
 
+        .project-card:nth-child(1) { animation-delay: 0.5s; }
+        .project-card:nth-child(2) { animation-delay: 0.65s; }
+        .project-card:nth-child(3) { animation-delay: 0.8s; }
+
         .project-card:not(.flipping):hover {
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            border-color: rgba(0, 0, 0, 0.12);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+            border-color: rgba(0,0,0,0.12); box-shadow: 0 4px 16px rgba(0,0,0,0.05);
             transform: translateY(-6px) scale(1.02);
+        }
+
+        .project-card.expanded {
+            position: fixed; inset: 0; margin: auto;
+            max-width: 600px; width: 90%; height: fit-content;
+            overflow-y: auto; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+            border-color: rgba(0,0,0,0.08); box-shadow: 0 16px 64px rgba(0,0,0,0.12);
+            z-index: 101; cursor: default;
         }
 
         .project-card.expanded:not(.flipping):hover {
             transform: translateY(-5px) scale(1.01);
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.1);
-            border-color: rgba(0, 0, 0, 0.12);
+            box-shadow: 0 12px 48px rgba(0,0,0,0.1); border-color: rgba(0,0,0,0.12);
         }
 
-        .project-card:nth-child(1) { animation-delay: 0.5s; }
+        .project-name { font-size: 1.1rem; font-weight: 500; margin-bottom: 10px; color: #1a1a1a; }
+        .project-card.expanded .project-name { font-size: 1.6rem; transition: font-size 0.3s ease; }
+        .project-desc { font-size: 0.85rem; color: #999; line-height: 1.6; margin-bottom: 16px; }
+        .project-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 
-        .project-name {
-            font-size: 1.1rem;
-            font-weight: 500;
-            margin-bottom: 10px;
-            color: #1a1a1a;
-        }
+        .tag { font-size: 0.75rem; color: #999; padding: 3px 10px; border: 1px solid rgba(0,0,0,0.05); border-radius: 999px; }
 
-        .project-desc {
-            font-size: 0.85rem;
-            color: #999;
-            line-height: 1.6;
-            margin-bottom: 16px;
-        }
-
-        .project-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .tag {
-            font-size: 0.75rem;
-            color: #999;
-            padding: 3px 10px;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            border-radius: 999px;
-        }
-
-        .project-detail-overlay {
-            display: none;
-        }
-
-        .card-backdrop {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.01);
-            z-index: 100;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s ease;
-        }
-
-        .card-backdrop.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .project-card.expanded {
-            position: fixed;
-            inset: 0;
-            margin: auto;
-            max-width: 600px;
-            width: 90%;
-            max-height: none;
-            height: fit-content;
-            overflow-y: auto;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            border-color: rgba(0, 0, 0, 0.08);
-            box-shadow: 0 16px 64px rgba(0, 0, 0, 0.12);
-            z-index: 101;
-            cursor: default;
-        }
-
-        .project-detail {
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-            margin-top: 0;
-        }
-
-        .project-card.expanded .project-name {
-            font-size: 1.6rem;
-            transition: font-size 0.3s ease;
-        }
-
-        .detail-header {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-
-        .detail-name {
-            font-size: 2rem;
-            font-weight: 400;
-            letter-spacing: 0.2em;
-            margin-bottom: 8px;
-        }
-
-        .detail-desc {
-            font-size: 0.875rem;
-            color: #999;
-            line-height: 1.6;
-        }
+        .project-detail { max-height: 0; opacity: 0; overflow: hidden; margin-top: 0; }
 
         .detail-close {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            color: #999;
-            background: transparent;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            border-radius: 999px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 1;
+            position: absolute; top: 16px; right: 16px; width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; color: #999; background: transparent;
+            border: 1px solid rgba(0,0,0,0.05); border-radius: 999px;
+            cursor: pointer; transition: all 0.3s ease; opacity: 0; pointer-events: none; z-index: 1;
         }
 
-        .project-card.expanded .detail-close {
-            opacity: 1;
-            pointer-events: auto;
-            transition: all 0.3s ease 0.4s;
-        }
+        .project-card.expanded .detail-close { opacity: 1; pointer-events: auto; transition: all 0.3s ease 0.4s; }
+        .detail-close:hover { color: #1a1a1a; border-color: rgba(0,0,0,0.12); box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
 
-        .detail-close:hover {
-            color: #1a1a1a;
-            border-color: rgba(0, 0, 0, 0.12);
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-        }
+        .detail-section { margin-bottom: 20px; }
+        .detail-title { font-size: 0.75rem; color: #bbb; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 10px; }
+        .detail-list { list-style: none; padding: 0; }
+        .detail-list li { font-size: 0.85rem; color: #666; line-height: 1.8; padding-left: 16px; position: relative; }
+        .detail-list li::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 4px; height: 4px; border-radius: 50%; background: #ccc; }
 
-        .detail-section {
-            margin-bottom: 20px;
-        }
-
-        .detail-title {
-            font-size: 0.75rem;
-            color: #bbb;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .detail-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .detail-list li {
-            font-size: 0.85rem;
-            color: #666;
-            line-height: 1.8;
-            padding-left: 16px;
-            position: relative;
-        }
-
-        .detail-list li::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background: #ccc;
-        }
-
-        .detail-links {
-            display: flex;
-            gap: 12px;
-            margin-top: 8px;
-        }
-
+        .detail-links { display: flex; gap: 12px; margin-top: 8px; }
         .detail-link {
-            flex: 1;
-            text-align: center;
-            padding: 10px 16px;
-            font-size: 0.8rem;
-            color: #777;
-            text-decoration: none;
-            border: 1px solid rgba(0, 0, 0, 0.02);
-            border-radius: 999px;
-            background: transparent;
-            backdrop-filter: blur(1.5px);
-            -webkit-backdrop-filter: blur(1.5px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            transition: all 0.3s ease;
+            flex: 1; text-align: center; padding: 10px 16px; font-size: 0.8rem; color: #777;
+            text-decoration: none; border: 1px solid rgba(0,0,0,0.02); border-radius: 999px;
+            background: transparent; backdrop-filter: blur(1.5px); -webkit-backdrop-filter: blur(1.5px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06); transition: all 0.3s ease;
         }
-
-        .detail-link:hover {
-            color: #1a1a1a;
-            border-color: rgba(0, 0, 0, 0.12);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-        }
+        .detail-link:hover { color: #1a1a1a; border-color: rgba(0,0,0,0.12); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
 
         .download-card {
-            border: 1px solid rgba(0, 0, 0, 0.02);
-            border-radius: 999px;
-            background: transparent;
-            backdrop-filter: blur(1.5px);
-            -webkit-backdrop-filter: blur(1.5px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-            overflow: hidden;
-            transition: border-radius 0.3s ease;
-            will-change: transform;
+            border: 1px solid rgba(0,0,0,0.02); border-radius: 999px;
+            background: transparent; backdrop-filter: blur(1.5px); -webkit-backdrop-filter: blur(1.5px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06); overflow: hidden;
+            transition: border-radius 0.3s ease; will-change: transform;
         }
-
-        .download-card.expanded {
-            border-radius: 16px;
-        }
+        .download-card.expanded { border-radius: 16px; }
 
         .download-header {
-            padding: 10px 16px;
-            font-size: 0.8rem;
-            color: #777;
-            text-align: center;
-            cursor: pointer;
-            transition: color 0.3s ease;
+            padding: 10px 16px; font-size: 0.8rem; color: #777;
+            text-align: center; cursor: pointer; transition: color 0.3s ease;
         }
+        .download-card:hover .download-header { color: #1a1a1a; }
 
         .download-hint {
-            display: inline-block;
-            max-width: 0;
-            opacity: 0;
-            overflow: hidden;
-            white-space: nowrap;
-            font-size: 0.7rem;
-            color: #bbb;
+            display: inline-block; max-width: 0; opacity: 0; overflow: hidden;
+            white-space: nowrap; font-size: 0.7rem; color: #bbb;
             transition: max-width 0.3s ease, opacity 0.3s ease, margin-left 0.3s ease;
         }
+        .download-card.expanded .download-hint { max-width: 100px; opacity: 1; margin-left: 4px; }
 
-        .download-card.expanded .download-hint {
-            max-width: 100px;
-            opacity: 1;
-            margin-left: 4px;
-        }
-
-        .download-card:hover .download-header {
-            color: #1a1a1a;
-        }
-
-        .download-menu {
-            max-height: 0;
-            overflow: hidden;
-            opacity: 0;
-            transition: max-height 0.3s cubic-bezier(0, 0, 0.2, 1), opacity 0.2s ease;
-        }
-
-        .download-card.expanded .download-menu {
-            max-height: 200px;
-            opacity: 1;
-        }
+        .download-menu { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.3s cubic-bezier(0,0,0.2,1), opacity 0.2s ease; }
+        .download-card.expanded .download-menu { max-height: 200px; opacity: 1; }
 
         .download-option {
-            padding: 10px 16px;
-            font-size: 0.8rem;
-            color: #999;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-top: 1px solid rgba(0, 0, 0, 0.03);
+            padding: 10px 16px; font-size: 0.8rem; color: #777; text-align: center;
+            cursor: pointer; transition: all 0.3s ease; border-top: 1px solid rgba(0,0,0,0.03);
         }
+        .download-option:hover { color: #1a1a1a; background: rgba(0,0,0,0.02); }
+        .download-option.loading { opacity: 0.5; pointer-events: none; }
 
-        .download-option:hover {
-            color: #1a1a1a;
-            background: rgba(0, 0, 0, 0.02);
+        .card-backdrop {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.01); z-index: 100; opacity: 0;
+            pointer-events: none; transition: opacity 0.4s ease;
         }
-
-        .download-option.loading {
-            opacity: 0.5;
-            pointer-events: none;
-        }
+        .card-backdrop.active { opacity: 1; pointer-events: auto; }
 
         @media (max-width: 768px) {
-            .nav {
-                top: 16px;
-                padding: 6px 8px;
-            }
-
-            .nav a {
-                padding: 6px 14px;
-                font-size: 0.8rem;
-            }
-
-            .page-title {
-                font-size: 1.5rem;
-                letter-spacing: 0.2em;
-            }
-
-            .content {
-                padding: 100px 16px 60px;
-            }
-
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
+            .nav { top: 16px; padding: 6px 8px; }
+            .nav a { padding: 6px 14px; font-size: 0.8rem; }
+            .page-title { font-size: 1.5rem; letter-spacing: 0.2em; }
+            .content { padding: 100px 16px 60px; }
+            .projects-grid { grid-template-columns: 1fr; }
         }
 
-        @keyframes navFadeIn {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        body.fade-out {
-            opacity: 0;
-            filter: blur(8px);
-        }
+        @keyframes navFadeIn { from { opacity: 0; transform: translateX(-50%) translateY(-20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -507,238 +191,128 @@
         <div class="title-wrap">
             <h1 class="page-title">PROJECTS</h1>
         </div>
-        <div class="projects-grid">
-            <div class="project-card" id="project-qs-timer">
-                <button class="detail-close" id="detail-close">&times;</button>
+        <div class="projects-grid" id="projects-grid"></div>
+    </div>
+    <div class="card-backdrop" id="card-backdrop"></div>
+
+    <script src="projects.js"></script>
+    <script>
+        const grid = document.getElementById('projects-grid');
+        const backdrop = document.getElementById('card-backdrop');
+        let activeCard = null;
+        let releaseCache = {};
+
+        PROJECTS.forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'project-card';
+            card.dataset.id = p.id;
+
+            let downloadHtml = '';
+            if (p.download) {
+                const opts = p.download.platforms.map(pl =>
+                    `<div class="download-option" data-ext="${pl.ext}" data-repo="${p.download.gitee}">${pl.label}</div>`
+                ).join('');
+                downloadHtml = `
+                    <div class="detail-section">
+                        <div class="detail-title">下载</div>
+                        <div class="download-card">
+                            <div class="download-header">下载最新版本<span class="download-hint">（点击关闭）</span></div>
+                            <div class="download-menu">${opts}</div>
+                        </div>
+                    </div>`;
+            }
+
+            const featHtml = p.features.map(f => `<li>${f}</li>`).join('');
+            const techHtml = p.tech.map(t => `<li>${t}</li>`).join('');
+
+            card.innerHTML = `
+                <button class="detail-close">&times;</button>
                 <div class="project-summary">
-                    <div class="project-name">QS魔方计时</div>
-                    <p class="project-desc">多人魔方计时器，支持键盘/点击记录成绩、自动排名、金银铜高亮及时间差显示。</p>
-                    <div class="project-tags">
-                        <span class="tag">Tauri 2.0</span>
-                        <span class="tag">React 19</span>
-                        <span class="tag">TypeScript</span>
-                    </div>
+                    <div class="project-name">${p.name}</div>
+                    <p class="project-desc">${p.desc}</p>
+                    <div class="project-tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
                 </div>
                 <div class="project-detail">
                     <div class="detail-section">
                         <div class="detail-title">功能特性</div>
-                        <ul class="detail-list">
-                            <li>极光粒子动态背景</li>
-                            <li>自定义无边框标题栏（拖拽/最小化/最大化/关闭）</li>
-                            <li>键盘任意键记录选手成绩</li>
-                            <li>点击圆环区域也可触发</li>
-                            <li>成绩榜自动排名，金银铜高亮</li>
-                            <li>时间差（gap）显示</li>
-                        </ul>
+                        <ul class="detail-list">${featHtml}</ul>
                     </div>
                     <div class="detail-section">
                         <div class="detail-title">技术栈</div>
-                        <ul class="detail-list">
-                            <li>Tauri 2.0 + Rust 后端</li>
-                            <li>React 19 + TypeScript</li>
-                            <li>Vite 构建</li>
-                        </ul>
+                        <ul class="detail-list">${techHtml}</ul>
                     </div>
                     <div class="detail-section">
                         <div class="detail-title">源码</div>
                         <div class="detail-links">
-                            <a href="https://github.com/AERKEALENN/qs-timer" target="_blank" class="detail-link">GitHub</a>
-                            <a href="https://gitee.com/AERKEALENN/qs-timer" target="_blank" class="detail-link">Gitee</a>
+                            <a href="${p.github}" target="_blank" class="detail-link">GitHub</a>
+                            <a href="${p.gitee}" target="_blank" class="detail-link">Gitee</a>
                         </div>
                     </div>
-                    <div class="detail-section">
-                        <div class="detail-title">下载</div>
-                        <div class="download-card" id="download-card">
-                            <div class="download-header" id="download-btn">下载最新版本<span class="download-hint">（点击关闭）</span></div>
-                            <div class="download-menu" id="download-menu">
-                                <div class="download-option" data-ext="deb">Linux (deb)</div>
-                                <div class="download-option" data-ext="rpm">Linux (rpm)</div>
-                                <div class="download-option" data-ext="exe">Windows (exe)</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card-backdrop" id="card-backdrop"></div>
-    </div>
-
-    <script>
-        const canvas = document.getElementById('particles');
-        const ctx = canvas.getContext('2d');
-        let hLines = [];
-        let vLines = [];
-        let startTime = null;
-        let lineOpacity = 0;
-
-        function createLines() {
-            hLines = [];
-            vLines = [];
-            const spacing = 60;
-
-            const hCount = Math.ceil(canvas.height / spacing);
-            for (let i = 0; i < hCount; i++) {
-                hLines.push({
-                    y: (canvas.height / hCount) * i + Math.random() * spacing,
-                    speed: (Math.random() * 0.4 + 0.1) * (Math.random() < 0.5 ? -1 : 1),
-                    opacity: Math.random() * 0.15 + 0.06
-                });
-            }
-
-            const vCount = Math.ceil(canvas.width / spacing);
-            for (let i = 0; i < vCount; i++) {
-                vLines.push({
-                    x: (canvas.width / vCount) * i + Math.random() * spacing,
-                    speed: (Math.random() * 0.4 + 0.1) * (Math.random() < 0.5 ? -1 : 1),
-                    opacity: Math.random() * 0.15 + 0.06
-                });
-            }
-        }
-
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-
-        let lastFrameTime = 0;
-        const frameInterval = 25;
-
-        function animate(timestamp) {
-            requestAnimationFrame(animate);
-            if (timestamp - lastFrameTime < frameInterval) return;
-            lastFrameTime = timestamp;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            if (!startTime) startTime = Date.now();
-            const elapsed = (Date.now() - startTime) / 1000;
-
-            if (elapsed > 0.4) {
-                lineOpacity = Math.min(1, (elapsed - 0.4) / 0.8);
-            }
-
-            hLines.forEach(l => {
-                l.y += l.speed;
-                if (l.y < 0) l.y = canvas.height;
-                if (l.y > canvas.height) l.y = 0;
-
-                ctx.beginPath();
-                ctx.moveTo(0, l.y);
-                ctx.lineTo(canvas.width, l.y);
-                ctx.strokeStyle = `rgba(100, 149, 237, ${l.opacity * lineOpacity})`;
-                ctx.lineWidth = 1;
-                ctx.stroke();
-            });
-
-            vLines.forEach(l => {
-                l.x += l.speed;
-                if (l.x < 0) l.x = canvas.width;
-                if (l.x > canvas.width) l.x = 0;
-
-                ctx.beginPath();
-                ctx.moveTo(l.x, 0);
-                ctx.lineTo(l.x, canvas.height);
-                ctx.strokeStyle = `rgba(100, 149, 237, ${l.opacity * lineOpacity})`;
-                ctx.lineWidth = 1;
-                ctx.stroke();
-            });
-        }
-
-        window.addEventListener('load', () => {
-            resize();
-            createLines();
-            requestAnimationFrame(animate);
+                    ${downloadHtml}
+                </div>`;
+            grid.appendChild(card);
         });
 
-        window.addEventListener('resize', () => {
-            resize();
-            createLines();
-        });
+        function expandCard(target) {
+            activeCard = target;
+            target.classList.add('flipping');
+            target.style.animation = 'none';
+            target.style.opacity = '1';
+            const detail = target.querySelector('.project-detail');
+            const first = target.getBoundingClientRect();
 
-        const nav = document.querySelector('.nav');
-        const pill = document.querySelector('.nav-pill');
-        const activeLink = nav.querySelector('.active');
-        const otherLink = nav.querySelector('a:not(.active)');
-
-        function positionPill(target) {
-            const navRect = nav.getBoundingClientRect();
-            const targetRect = target.getBoundingClientRect();
-            pill.style.left = (targetRect.left - navRect.left) + 'px';
-            pill.style.width = targetRect.width + 'px';
-        }
-
-        positionPill(activeLink);
-
-        otherLink.addEventListener('click', e => {
-            e.preventDefault();
-            positionPill(otherLink);
-            setTimeout(() => {
-                document.body.classList.add('fade-out');
-                setTimeout(() => { window.location.href = otherLink.href; }, 400);
-            }, 150);
-        });
-
-        const card = document.getElementById('project-qs-timer');
-        const backdrop = document.getElementById('card-backdrop');
-        const closeBtn = document.getElementById('detail-close');
-
-        function expandCard() {
-            card.classList.add('flipping');
-            card.style.animation = 'none';
-            card.style.opacity = '1';
-            const detail = card.querySelector('.project-detail');
-            const first = card.getBoundingClientRect();
-
-            card.style.transition = 'none';
+            target.style.transition = 'none';
             detail.style.transition = 'none';
-            card.offsetHeight;
+            target.offsetHeight;
 
-            card.classList.add('expanded');
+            target.classList.add('expanded');
             backdrop.classList.add('active');
 
             detail.style.maxHeight = 'none';
             detail.style.marginTop = '24px';
             detail.style.overflow = 'visible';
             detail.style.opacity = '0';
-            card.offsetHeight;
+            target.offsetHeight;
 
-            const last = card.getBoundingClientRect();
-
+            const last = target.getBoundingClientRect();
             const deltaX = first.left - last.left;
             const deltaY = first.top - last.top;
             const scaleX = first.width / last.width;
             const scaleY = first.height / last.height;
 
-            card.style.transformOrigin = '0 0';
-            card.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`;
-
-            card.offsetHeight;
+            target.style.transformOrigin = '0 0';
+            target.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`;
+            target.offsetHeight;
 
             requestAnimationFrame(() => {
-                card.style.transition = 'transform 0.35s cubic-bezier(0, 0, 0.2, 1)';
-                card.style.transform = '';
+                target.style.transition = 'transform 0.35s cubic-bezier(0,0,0.2,1)';
+                target.style.transform = '';
                 detail.style.transition = 'opacity 0.25s ease 0.05s';
                 detail.style.opacity = '1';
             });
 
             setTimeout(() => {
-                card.style.transition = '';
-                card.style.transformOrigin = '';
-                card.classList.remove('flipping');
+                target.style.transition = '';
+                target.style.transformOrigin = '';
+                target.classList.remove('flipping');
             }, 500);
         }
 
         function collapseCard() {
-            card.classList.add('flipping');
-            if (downloadCard.classList.contains('expanded')) {
-                downloadCard.classList.remove('expanded');
-            }
-            const detail = card.querySelector('.project-detail');
-            const last = card.getBoundingClientRect();
+            if (!activeCard) return;
+            const target = activeCard;
+            target.classList.add('flipping');
+            const detail = target.querySelector('.project-detail');
+            const last = target.getBoundingClientRect();
 
-            card.style.transition = 'none';
-            card.style.pointerEvents = 'none';
-            card.offsetHeight;
+            const dlCard = target.querySelector('.download-card');
+            if (dlCard && dlCard.classList.contains('expanded')) {
+                dlCard.classList.remove('expanded');
+            }
+
+            target.style.transition = 'none';
+            target.style.pointerEvents = 'none';
+            target.offsetHeight;
 
             detail.style.transition = 'none';
             detail.style.maxHeight = '0';
@@ -746,148 +320,90 @@
             detail.style.opacity = '0';
             detail.style.overflow = 'hidden';
 
-            card.classList.remove('expanded');
+            target.classList.remove('expanded');
             backdrop.classList.remove('active');
-            const first = card.getBoundingClientRect();
+            const first = target.getBoundingClientRect();
 
             const deltaX = last.left - first.left;
             const deltaY = last.top - first.top;
             const scaleX = last.width / first.width;
             const scaleY = last.height / first.height;
 
-            card.style.transformOrigin = '0 0';
-            card.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`;
-            card.offsetHeight;
+            target.style.transformOrigin = '0 0';
+            target.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`;
+            target.offsetHeight;
 
             requestAnimationFrame(() => {
-                card.style.transition = 'transform 0.35s cubic-bezier(0, 0, 0.2, 1)';
-                card.style.transform = '';
+                target.style.transition = 'transform 0.35s cubic-bezier(0,0,0.2,1)';
+                target.style.transform = '';
             });
 
             setTimeout(() => {
-                card.style.transition = '';
-                card.style.transformOrigin = '';
-                card.style.pointerEvents = '';
-                card.classList.remove('flipping');
+                target.style.transition = '';
+                target.style.transformOrigin = '';
+                target.style.pointerEvents = '';
+                target.classList.remove('flipping');
                 detail.style.transition = '';
                 detail.style.opacity = '';
                 detail.style.maxHeight = '';
                 detail.style.marginTop = '';
                 detail.style.overflow = '';
             }, 400);
+
+            activeCard = null;
         }
 
-        card.addEventListener('animationend', () => {
-            card.style.animation = 'none';
-            card.style.opacity = '1';
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('animationend', () => {
+                card.style.animation = 'none';
+                card.style.opacity = '1';
+            });
+
+            card.addEventListener('click', e => {
+                if (card.classList.contains('expanded')) { e.stopPropagation(); return; }
+                if (e.target.closest('.detail-link') || e.target.closest('.detail-close') || e.target.closest('.download-card')) return;
+                expandCard(card);
+            });
         });
 
-        card.addEventListener('click', e => {
-            if (card.classList.contains('expanded')) {
+        document.querySelectorAll('.detail-close').forEach(btn => {
+            btn.addEventListener('click', e => {
                 e.stopPropagation();
-                return;
-            }
-            if (e.target.closest('.detail-link') || e.target.closest('.detail-close') || e.target.closest('.download-card')) return;
-            expandCard();
-        });
-
-        closeBtn.addEventListener('click', e => {
-            e.stopPropagation();
-            if (card.classList.contains('expanded')) collapseCard();
+                if (activeCard && activeCard.classList.contains('expanded')) collapseCard();
+            });
         });
 
         backdrop.addEventListener('click', () => {
-            if (card.classList.contains('expanded')) collapseCard();
+            if (activeCard && activeCard.classList.contains('expanded')) collapseCard();
         });
 
         document.addEventListener('keydown', e => {
-            if (e.key === 'Escape' && card.classList.contains('expanded')) {
-                collapseCard();
-            }
+            if (e.key === 'Escape' && activeCard && activeCard.classList.contains('expanded')) collapseCard();
         });
 
-        const downloadCard = document.getElementById('download-card');
-        const downloadBtn = document.getElementById('download-btn');
-        let releaseCache = null;
-
-        downloadBtn.addEventListener('click', e => {
-            e.stopPropagation();
-            if (downloadCard.classList.contains('expanded')) {
-                collapseDownload();
-            } else {
-                expandDownload();
-            }
+        document.querySelectorAll('.download-card').forEach(dlCard => {
+            const header = dlCard.querySelector('.download-header');
+            header.addEventListener('click', e => {
+                e.stopPropagation();
+                dlCard.classList.toggle('expanded');
+            });
         });
-
-        function expandDownload() {
-            const first = downloadCard.getBoundingClientRect();
-            downloadCard.style.transition = 'none';
-            downloadCard.offsetHeight;
-            downloadCard.classList.add('expanded');
-            const last = downloadCard.getBoundingClientRect();
-
-            const scaleX = first.width / last.width;
-            const scaleY = first.height / last.height;
-            const deltaX = first.left - last.left;
-            const deltaY = first.top - last.top;
-
-            downloadCard.style.transformOrigin = '0 0';
-            downloadCard.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`;
-            downloadCard.offsetHeight;
-
-            requestAnimationFrame(() => {
-                downloadCard.style.transition = 'transform 0.6s cubic-bezier(0, 0, 0.2, 1)';
-                downloadCard.style.transform = '';
-            });
-
-            setTimeout(() => {
-                downloadCard.style.transition = '';
-                downloadCard.style.transformOrigin = '';
-            }, 650);
-        }
-
-        function collapseDownload() {
-            const last = downloadCard.getBoundingClientRect();
-            downloadCard.style.transition = 'none';
-            downloadCard.offsetHeight;
-            downloadCard.classList.remove('expanded');
-            const first = downloadCard.getBoundingClientRect();
-
-            const scaleX = last.width / first.width;
-            const scaleY = last.height / first.height;
-            const deltaX = last.left - first.left;
-            const deltaY = last.top - first.top;
-
-            downloadCard.style.transformOrigin = '0 0';
-            downloadCard.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scaleX}, ${scaleY})`;
-            downloadCard.offsetHeight;
-
-            requestAnimationFrame(() => {
-                downloadCard.style.transition = 'transform 0.45s cubic-bezier(0, 0, 0.2, 1)';
-                downloadCard.style.transform = '';
-            });
-
-            setTimeout(() => {
-                downloadCard.style.transition = '';
-                downloadCard.style.transformOrigin = '';
-            }, 500);
-        }
 
         document.querySelectorAll('.download-option').forEach(opt => {
             opt.addEventListener('click', async e => {
                 e.stopPropagation();
                 const ext = opt.dataset.ext;
+                const repo = opt.dataset.repo;
                 const label = opt.textContent;
                 opt.classList.add('loading');
                 opt.textContent = '获取中...';
 
                 try {
-                    if (!releaseCache) {
-                        const res = await fetch('https://gitee.com/api/v5/repos/AERKEALENN/qs-timer/releases/latest');
-                        releaseCache = await res.json();
+                    if (!releaseCache[repo]) {
+                        const res = await fetch(`https://gitee.com/api/v5/repos/${repo}/releases/latest`);
+                        releaseCache[repo] = await res.json();
                     }
-
-                    const asset = releaseCache.assets.find(a => a.name.endsWith('.' + ext));
+                    const asset = releaseCache[repo].assets.find(a => a.name.endsWith('.' + ext));
                     if (asset) {
                         window.location.href = asset.browser_download_url;
                         opt.textContent = label;
@@ -903,6 +419,83 @@
                 }
             });
         });
+
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let hLines = [], startTime = null, lineOpacity = 0;
+
+        function createLines() {
+            hLines = [];
+            const spacing = canvas.width < 768 ? 80 : 60;
+            const hCount = Math.ceil(canvas.height / spacing);
+            for (let i = 0; i < hCount; i++) {
+                hLines.push({ y: (canvas.height / hCount) * i + Math.random() * spacing, speed: (Math.random() * 0.4 + 0.1) * (Math.random() < 0.5 ? -1 : 1), opacity: Math.random() * 0.15 + 0.06 });
+            }
+            const vCount = Math.ceil(canvas.width / spacing);
+            for (let i = 0; i < vCount; i++) {
+                hLines.push({ x: (canvas.width / vCount) * i + Math.random() * spacing, speed: (Math.random() * 0.4 + 0.1) * (Math.random() < 0.5 ? -1 : 1), opacity: Math.random() * 0.15 + 0.06, vertical: true });
+            }
+        }
+
+        let lastFrameTime = 0;
+        const frameInterval = 25;
+
+        function animate(timestamp) {
+            requestAnimationFrame(animate);
+            if (timestamp - lastFrameTime < frameInterval) return;
+            lastFrameTime = timestamp;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (!startTime) startTime = Date.now();
+            const elapsed = (Date.now() - startTime) / 1000;
+            if (elapsed > 0.4) lineOpacity = Math.min(1, (elapsed - 0.4) / 0.8);
+
+            hLines.forEach(l => {
+                if (l.vertical) {
+                    l.x += l.speed;
+                    if (l.x < 0) l.x = canvas.width;
+                    if (l.x > canvas.width) l.x = 0;
+                    ctx.beginPath(); ctx.moveTo(l.x, 0); ctx.lineTo(l.x, canvas.height);
+                } else {
+                    l.y += l.speed;
+                    if (l.y < 0) l.y = canvas.height;
+                    if (l.y > canvas.height) l.y = 0;
+                    ctx.beginPath(); ctx.moveTo(0, l.y); ctx.lineTo(canvas.width, l.y);
+                }
+                ctx.strokeStyle = `rgba(100, 149, 237, ${l.opacity * lineOpacity})`;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            });
+        }
+
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+
+        window.addEventListener('load', () => { resize(); createLines(); requestAnimationFrame(animate); });
+        window.addEventListener('resize', () => { resize(); createLines(); });
+
+        document.querySelectorAll('.nav a:not(.active)').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                positionPill(link);
+                setTimeout(() => {
+                    document.body.classList.add('fade-out');
+                    setTimeout(() => { window.location.href = link.href; }, 400);
+                }, 150);
+            });
+        });
+
+        const nav = document.querySelector('.nav');
+        const pill = document.querySelector('.nav-pill');
+        const activeLink = nav.querySelector('.active');
+        const otherLink = nav.querySelector('a:not(.active)');
+
+        function positionPill(target) {
+            const navRect = nav.getBoundingClientRect();
+            const targetRect = target.getBoundingClientRect();
+            pill.style.left = (targetRect.left - navRect.left) + 'px';
+            pill.style.width = targetRect.width + 'px';
+        }
+        positionPill(activeLink);
     </script>
 </body>
 </html>
