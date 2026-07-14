@@ -26,7 +26,7 @@ const PROJECTS = [
   },
   {
     id: 'qs-theebody',
-    name: '三体运动模拟',
+    name: 'QS三体运动模拟',
     desc: '三体运动数值模拟与3D可视化，支持多种初始化模式和碰撞检测。',
     tags: ['Tauri 2.0', 'React 19', 'Three.js', 'VibeCoding'],
     features: [
@@ -43,6 +43,56 @@ const PROJECTS = [
     gitee: 'https://gitee.com/AERKEALENN/qs-theebody',
     download: {
       gitee: 'AERKEALENN/qs-theebody',
+      platforms: [
+        { ext: 'deb', label: 'Linux (deb)' },
+        { ext: 'rpm', label: 'Linux (rpm)' },
+        { ext: 'exe', label: 'Windows (exe)' }
+      ]
+    }
+  },
+  {
+    id: 'qs-calculator',
+    name: 'QS Calculator',
+    desc: '深色玻璃拟态桌面计算器，支持键盘输入、计算历史和极光粒子背景。',
+    tags: ['Tauri 2.0', 'React 19', 'TypeScript', 'VibeCoding'],
+    features: [
+      '深色玻璃拟态 UI，动态极光 Canvas 背景',
+      '鼠标跟随高光反射效果',
+      '横竖屏自适应布局',
+      '计算历史记录（横屏模式）',
+      '键盘快捷键支持',
+      '自定义无边框标题栏（最小化/最大化/关闭）'
+    ],
+    tech: ['Tauri 2.0 + Rust 后端', 'React 19 + TypeScript', 'Vite 构建'],
+    github: 'https://github.com/AERKEALENN/qs-calculator',
+    gitee: 'https://gitee.com/AERKEALENN/qs-calculator',
+    download: {
+      gitee: 'AERKEALENN/qs-calculator',
+      platforms: [
+        { ext: 'deb', label: 'Linux (deb)' },
+        { ext: 'rpm', label: 'Linux (rpm)' },
+        { ext: 'exe', label: 'Windows (exe)' }
+      ]
+    }
+  },
+  {
+    id: 'qs-aiAutomation',
+    name: 'QSai 桌面自动化',
+    desc: '基于视觉大模型的桌面自动化工具，自动截图、识别界面、模拟点击。',
+    tags: ['Python', 'Vision LLM', 'VibeCoding'],
+    features: [
+      '全屏截图 + UI Automation 枚举可见控件',
+      '叠加红色框 + 绿色编号（Set-of-Marks）',
+      'AI 根据编号选择控件并决定动作（左键/右键/粘贴/滚动等）',
+      '多步骤任务自动循环执行',
+      '截图分析模式（--analyze）',
+      '纯截图模式（--screenshot）'
+    ],
+    tech: ['Python', 'Vision LLM', 'UI Automation'],
+    github: 'https://github.com/AERKEALENN/qs-aiAutomation',
+    gitee: 'https://gitee.com/AERKEALENN/qs-aiAutomation',
+    download: {
+      gitee: 'AERKEALENN/qs-aiAutomation',
       platforms: [
         { ext: 'deb', label: 'Linux (deb)' },
         { ext: 'rpm', label: 'Linux (rpm)' },
