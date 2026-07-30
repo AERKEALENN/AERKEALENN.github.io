@@ -52,7 +52,7 @@ const PROJECTS = [
   },
   {
     id: 'qs-calculator',
-    name: 'QS Calculator',
+    name: 'QS计算器',
     desc: '深色玻璃拟态桌面计算器，支持键盘输入、计算历史和极光粒子背景。',
     tags: ['Tauri 2.0', 'React 19', 'TypeScript', 'VibeCoding'],
     features: [
@@ -77,7 +77,7 @@ const PROJECTS = [
   },
   {
     id: 'qs-aiAutomation',
-    name: 'QSai 桌面自动化',
+    name: 'QS ai桌面自动化',
     desc: '基于视觉大模型的桌面自动化工具，自动截图、识别界面、模拟点击。',
     tags: ['Python', 'Vision LLM', 'VibeCoding'],
     features: [
@@ -99,5 +99,21 @@ const PROJECTS = [
         { ext: 'exe', label: 'Windows (exe)' }
       ]
     }
+  },
+  {
+    id: 'qs-ai-snake',
+    name: 'QS ai贪吃蛇',
+    desc: '基于 AI 的贪吃蛇游戏，支持人机对战和智能策略学习。',
+    tags: ['AI', 'Python', 'VibeCoding'],
+    features: [
+      'AI 智能控制贪吃蛇运动',
+      '人机对战模式',
+      '智能策略学习与优化',
+      '实时游戏状态可视化'
+    ],
+    tech: ['Python', 'AI/ML'],
+    github: 'https://github.com/AERKEALENN/qs-ai-snake',
+    gitee: 'https://gitee.com/AERKEALENN/qs-ai-snake',
+    download: null
   }
 ];
